@@ -17,16 +17,19 @@
 import sys
 import os
 import glob
+import linecache
 
-if len(sys.argv) < 5:
+if len(sys.argv) < 3:
     print(
-        "Args: [param_RootPath, param_HeaderID, param_Title, param_Copyright]")
+        "Args: [param_RootPath, param_LicenseFile]")
     exit()
 
 param_RootPath = sys.argv[1].replace('\\', '/')
-param_HeaderID = sys.argv[2]
-param_Title = sys.argv[3]
-param_Copyright = sys.argv[4]
+param_LicenseFile = sys.argv[2].replace('\\', '/')
+
+param_HeaderID = linecache.getline(param_LicenseFile, 1)[:-1]
+param_Title = linecache.getline(param_LicenseFile, 2)[:-1]
+param_Copyright = linecache.getline(param_LicenseFile, 3)[:-1]
 
 print("[UpdateHeaders_GPLv3]")
 print("    Root:      " + param_RootPath)
