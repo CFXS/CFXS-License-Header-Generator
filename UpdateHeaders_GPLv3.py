@@ -14,28 +14,29 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>
 
-import sys
 import os
 import glob
 import linecache
+import argparse
 
-if len(sys.argv) < 3:
-    print(
-        "Args: [param_RootPath, param_LicenseFile]")
-    exit()
+usage = "Args: [param_RootPath, param_LicenseFile]"
+parser = argparse.ArgumentParser(usage=usage)
+parser.add_argument("RootPath", type=str)
+parser.add_argument("LicenseFile", type=str)
+args = parser.parse_args()
 
-param_RootPath = sys.argv[1].replace('\\', '/')
-param_LicenseFile = sys.argv[2].replace('\\', '/')
+param_RootPath = args.RootPath.replace('\\', '/')
+param_LicenseFile = args.LicenseFile.replace('\\', '/')
 
 param_HeaderID = linecache.getline(param_LicenseFile, 1)[:-1]
 param_Title = linecache.getline(param_LicenseFile, 2)[:-1]
 param_Copyright = linecache.getline(param_LicenseFile, 3)[:-1]
 
-print("[UpdateHeaders_GPLv3]")
-print("    Root:      " + param_RootPath)
-print("    ID:        " + param_HeaderID)
-print("    Title:     " + param_Title)
-print("    Copyright: " + param_Copyright)
+print(f"[UpdateHeaders_GPLv3]\n \
+    Root:       {param_RootPath}\n \
+    ID:         {param_HeaderID}\n \
+    Title:      {param_Title}\n \
+    Copyright:  {param_Copyright}")
 
 licenseTemplate = open(os.path.abspath(os.path.dirname(
     __file__)).replace('\\', '/') + "/GPLv3.lic").read()
@@ -68,5 +69,5 @@ for filePath in files:
             file.write(fileContent)
             file.truncate()
             file.close()
-            print("Updated " + filePath[len(param_RootPath):])
+            print(f"Updated {filePath[len(param_RootPath):]}")
 print("> Done")
